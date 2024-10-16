@@ -10,7 +10,6 @@ const movieRoute = Router()
 movieRoute.get('/', async (req, res) => {
 	try {
 		const query = getMoviesSchema.parse(req.query)
-		console.log(query)
 
 		const movies = await getMovies(query)
 
@@ -18,7 +17,6 @@ movieRoute.get('/', async (req, res) => {
 			movies
 		})
 	} catch (error) {
-		console.log(error)
 		if (error instanceof ZodError) {
 			// biome-ignore lint/suspicious/noExplicitAny:
 			const errorMessages = error.errors.map((issue: any) => ({
