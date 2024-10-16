@@ -5,15 +5,19 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --watch src src/index.ts",
-    "seed": "ts-node prisma/seed/seed.ts"
+    "seed": "ts-node prisma/seed/seed.ts",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@biomejs/biome": "^1.9.3",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.7.5",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "nodemon": "^3.1.7",
     "prisma": "^5.20.0",
     "ts-node": "^10.9.2",
