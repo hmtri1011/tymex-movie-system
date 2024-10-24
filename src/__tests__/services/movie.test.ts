@@ -46,9 +46,9 @@ describe('Movie Service', () => {
 			prismaMock.movie.findMany.mockResolvedValue(mockMovies as unknown as Movie[])
 
 			const params: GetMoviesRequest = {
-				title: 'Test',
-				description: 'A test movie',
-				releaseDate: '2023-01-01',
+				search: 'Test',
+				minReleaseYear: '2010',
+				maxReleaseYear: '2024',
 				genre: [Genre.ACTION, Genre.COMEDY],
 				page: '1',
 				limit: '10'
@@ -58,9 +58,14 @@ describe('Movie Service', () => {
 			expect(result).toEqual(mockMovies)
 			expect(prismaMock.movie.findMany).toHaveBeenCalledWith({
 				where: {
-					title: { contains: 'Test', mode: 'insensitive' },
-					description: { contains: 'A test movie', mode: 'insensitive' },
-					releaseDate: { equals: '2023-01-01' },
+					OR: [
+						{ title: { contains: 'Test', mode: 'insensitive' } },
+						{ description: { contains: 'Test', mode: 'insensitive' } }
+					],
+					releaseYear: {
+						gte: 2010,
+						lte: 2024
+					},
 					genre: { hasEvery: [Genre.ACTION, Genre.COMEDY] }
 				},
 				skip: 0,

@@ -28,9 +28,9 @@ export const getMoviesSchema = z.object({
 				message: 'Limit must be a number'
 			}
 		),
-	title: z.string().optional(),
-	description: z.string().optional(),
-	releaseDate: z.string().optional(),
+	search: z.string().optional(),
+	minReleaseYear: z.string().optional(),
+	maxReleaseYear: z.string().optional(),
 	genre: z.array(z.nativeEnum(Genre)).optional()
 })
 

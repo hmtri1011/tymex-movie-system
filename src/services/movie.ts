@@ -7,9 +7,22 @@ export const getMovies = async (params?: GetMoviesRequest) => {
 
 	const movies = await prisma.movie.findMany({
 		where: {
-			...(params?.title ? { title: { contains: params.title, mode: 'insensitive' } } : {}),
-			...(params?.description ? { description: { contains: params.description, mode: 'insensitive' } } : {}),
-			...(params?.releaseDate ? { releaseDate: { equals: params.releaseDate } } : {}),
+			...(params?.search
+				? {
+						OR: [
+							{ title: { contains: params.search, mode: 'insensitive' } },
+							{ description: { contains: params.search, mode: 'insensitive' } }
+						]
+					}
+				: {}),
+			...(params?.minReleaseYear || params?.maxReleaseYear
+				? {
+						releaseYear: {
+							...(params?.minReleaseYear ? { gte: +params.minReleaseYear } : {}),
+							...(params?.maxReleaseYear ? { lte: +params.maxReleaseYear } : {})
+						}
+					}
+				: {}),
 			...(params?.genre ? { genre: { hasEvery: params.genre } } : {})
 		},
 		skip: (page - 1) * limit,
