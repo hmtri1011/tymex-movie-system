@@ -32,7 +32,7 @@ cd tymex-movie-system
 
 ### 3. Set up and run
 
-Create a `.env` file in the server directory. You can use the `.env.example` file as a template.
+Create a `.env` file in the root directory. You can use the `.env.example` file as a template.
 Install dependencies and start the development server:
 
 ```bash
