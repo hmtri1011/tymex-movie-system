@@ -2,7 +2,7 @@ import request from 'supertest'
 import express from 'express'
 
 import { movieRoute } from '../../../routes/v1/movie'
-import { getMovies } from '../../../services/movie'
+import { getMovieById, getMovies } from '../../../services/movie'
 import { ERRORS } from '../../../config'
 
 // Mock the getMovies service
@@ -37,5 +37,27 @@ describe('GET /movies', () => {
 
 		expect(response.status).toBe(500)
 		expect(response.body).toEqual({ error: ERRORS.INTERNAL_SERVER_ERROR })
+	})
+})
+
+describe('GET /movies/:id', () => {
+	test('should return a movie when a valid ID is provided', async () => {
+		const mockMovie = { id: 1, title: 'Test Movie' }
+		;(getMovieById as jest.Mock).mockResolvedValue(mockMovie)
+
+		const response = await request(app).get('/movies/1')
+
+		expect(response.status).toBe(200)
+		expect(response.body).toEqual({ movie: mockMovie })
+		expect(getMovieById).toHaveBeenCalledWith('1')
+	})
+
+	test('should return 404 when movie is not found', async () => {
+		;(getMovieById as jest.Mock).mockResolvedValue(null)
+
+		const response = await request(app).get('/movies/999')
+
+		expect(response.status).toBe(404)
+		expect(response.body).toEqual({ error: ERRORS.NOT_FOUND })
 	})
 })

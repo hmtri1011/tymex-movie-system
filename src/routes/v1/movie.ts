@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { ZodError } from 'zod'
 
-import { getMovies } from '../../services/movie'
+import { getMovieById, getMovies } from '../../services/movie'
 import { getMoviesSchema } from '../../schemas/movie'
 import { ERRORS } from '../../config'
 
@@ -27,6 +27,21 @@ movieRoute.get('/', async (req, res) => {
 			res.status(500).json({ error: ERRORS.INTERNAL_SERVER_ERROR })
 		}
 	}
+})
+
+movieRoute.get('/:id', async (req, res) => {
+	const { id } = req.params
+
+	const movie = await getMovieById(id)
+
+	if (!movie) {
+		res.status(404).json({ error: ERRORS.NOT_FOUND })
+		return
+	}
+
+	res.status(200).json({
+		movie
+	})
 })
 
 export { movieRoute }

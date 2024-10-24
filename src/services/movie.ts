@@ -31,3 +31,9 @@ export const getMovies = async (params?: GetMoviesRequest) => {
 
 	return movies
 }
+
+export const getMovieById = async (id: string) => {
+	const movie = await prisma.movie.findUnique({ where: { id } })
+
+	return movie
+}

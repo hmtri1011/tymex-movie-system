@@ -1,7 +1,7 @@
 import { Genre } from '@prisma/client'
 import type { Movie } from '@prisma/client'
 
-import { getMovies } from '../../services/movie'
+import { getMovies, getMovieById } from '../../services/movie'
 import type { GetMoviesRequest } from '../../schemas/movie'
 
 import { prismaMock } from '../../libs/__mocks__/prisma'
@@ -70,6 +70,31 @@ describe('Movie Service', () => {
 				},
 				skip: 0,
 				take: 10
+			})
+		})
+	})
+
+	describe('getMovie', () => {
+		test('should fetch a movie by ID', async () => {
+			const mockMovie = { id: 1, title: 'Test Movie' }
+			prismaMock.movie.findUnique.mockResolvedValue(mockMovie as unknown as Movie)
+
+			const result = await getMovieById('1')
+
+			expect(result).toEqual(mockMovie)
+			expect(prismaMock.movie.findUnique).toHaveBeenCalledWith({
+				where: { id: '1' }
+			})
+		})
+
+		test('should return null if movie not found', async () => {
+			prismaMock.movie.findUnique.mockResolvedValue(null)
+
+			const result = await getMovieById('999') // Assuming 999 is an ID that doesn't exist
+
+			expect(result).toBeNull()
+			expect(prismaMock.movie.findUnique).toHaveBeenCalledWith({
+				where: { id: '999' }
 			})
 		})
 	})
